@@ -1,0 +1,6 @@
+==5377== Memcheck, a memory error detector
+==5377== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==5377== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==5377== Command: ./sumdiag_benchmark -test
+==5377== Parent PID: 5375
+==5377== 

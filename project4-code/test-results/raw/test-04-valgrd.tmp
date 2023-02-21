@@ -1,0 +1,15 @@
+==5285== Memcheck, a memory error detector
+==5285== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==5285== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==5285== Command: ./sumdiag_print 13
+==5285== Parent PID: 5282
+==5285== 
+==5285== 
+==5285== HEAP SUMMARY:
+==5285==     in use at exit: 0 bytes in 0 blocks
+==5285==   total heap usage: 3 allocs, 3 frees, 876 bytes allocated
+==5285== 
+==5285== All heap blocks were freed -- no leaks are possible
+==5285== 
+==5285== For counts of detected and suppressed errors, rerun with: -v
+==5285== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

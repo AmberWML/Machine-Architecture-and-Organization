@@ -1,0 +1,18 @@
+(TEST 5) Prob1 sumdiag_benchmark valgrind
+COMMENTS:
+Checks whether sumdiag_benchmark has memory problems
+
+
+
+program: ./sumdiag_benchmark -test
+Failure messages:
+- FAILURE(137) due to TIMEOUT: Runtime exceeded maximum of '5s'
+
+--- Valgrind Log from: test-results/raw/test-05-valgrd.tmp ---
+==5377== Memcheck, a memory error detector
+==5377== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==5377== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==5377== Command: ./sumdiag_benchmark -test
+==5377== Parent PID: 5375
+==5377== 
+

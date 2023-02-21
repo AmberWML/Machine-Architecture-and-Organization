@@ -1,0 +1,15 @@
+==5791== Memcheck, a memory error detector
+==5791== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==5791== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==5791== Command: ./search_benchmark 1 10 1 blta
+==5791== Parent PID: 5788
+==5791== 
+==5791== 
+==5791== HEAP SUMMARY:
+==5791==     in use at exit: 0 bytes in 0 blocks
+==5791==   total heap usage: 4,152 allocs, 4,152 frees, 147,632 bytes allocated
+==5791== 
+==5791== All heap blocks were freed -- no leaks are possible
+==5791== 
+==5791== For counts of detected and suppressed errors, rerun with: -v
+==5791== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

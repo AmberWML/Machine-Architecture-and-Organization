@@ -1,0 +1,6 @@
+==5659== Memcheck, a memory error detector
+==5659== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==5659== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==5659== Command: ./search_benchmark 2 9 3 abt
+==5659== Parent PID: 5657
+==5659== 

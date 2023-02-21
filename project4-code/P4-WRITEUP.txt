@@ -1,0 +1,234 @@
+                              ____________
+
+                               P4 WRITEUP
+                              ____________
+
+
+- Name: (FILL THIS in)
+- NetID: (THE kauf0095 IN kauf0095@umn.edu)
+
+Answer the questions below according to the project specification. Write
+your answers directly in this text file and submit it along with your
+code.
+
+
+PROBLEM 1: sumdiag_OPTM()
+=========================
+
+  Do your timing study on atlas.cselabs.umn.edu
+
+
+(A) Paste Source Code
+~~~~~~~~~~~~~~~~~~~~~
+
+  Paste a copy of your source code for the function `sumdiag_OPTM()'
+
+ 
+(B) Timing on atlas
+~~~~~~~~~~~~~~~~~~~
+
+  Paste a copy of the results of running `sudmiag_benchmark' on
+  atlas.cselabs.umn.edu in the space below which shows how your
+  performance optimizations improved on the baseline codes.
+// optimized versions of matrix diagonal summing
+#include "matvec.h"
+
+// You can write several different versions of your optimized function
+// in this file and call one of them in the last function.
+
+int sumdiag_VER1(matrix_t mat, vector_t vec) {
+  // OPTIMIZED CODE HERE
+  if(vec.len != (mat.rows + mat.cols -1)){
+    printf("sumdiag_base: bad sizes\n");
+    return 1;
+  }
+  for(int i=0; i<vec.len; i++){                   // initialize vector of diagonal sums
+    VSET(vec,i,0);                                // to all 0s
+  }
+  int row_num = mat.rows;
+  int col_num = mat.cols;
+  int j;
+  for( int i=row_num-1; i>=0;i--){
+    for(j=0; j< col_num-2 ; j+=2){
+      int index = j-i + col_num- 1;
+      int el_ij = MGET(mat, i, j);                // get matrix element on diagonal
+        int vec_d = VGET(vec, index);                   // retrieve current sum for diag
+        VSET(vec, index, el_ij+vec_d);                  // add on back to the diagonal sum
+
+        int index1 = j-i + col_num;
+      int el_ij1 = MGET(mat, i, j+1);                // get matrix element on diagonal
+        int vec_d1 = VGET(vec, index1);                   // retrieve current sum for diag
+        VSET(vec, index1, el_ij1+vec_d1);                  // add on back to the diagonal sum
+
+    }
+    //clean up
+    for(; j<col_num ; j++){
+      int index = j-i + col_num- 1;
+      int el_ij = MGET(mat, i, j);                // get matrix element on diagonal
+        int vec_d = VGET(vec, index);                   // retrieve current sum for diag
+        VSET(vec, index, el_ij+vec_d);                  // add on back to the diagonal sum
+    }
+  }
+
+  
+  return 0;                                       // return success
+}
+
+int sumdiag_VER2(matrix_t mat, vector_t vec) {
+  // OPTIMIZED CODE HERE
+  return 0; 
+}
+
+int sumdiag_OPTM(matrix_t mat, vector_t vec) {
+  // call your preferred version of the function
+  
+  return sumdiag_VER1(mat, vec);
+}
+
+
+(C) Optimizations
+~~~~~~~~~~~~~~~~~
+
+  Describe in some detail the optimizations you used to speed the code
+  up.  THE CODE SHOULD CONTAIN SOME COMMENTS already to describe these
+  but in the section below, describe in English the techniques you used
+  to make the code run faster.  Format your descriptions into discrete
+  chunks such as.
+        Optimization 1: Blah bla blah... This should make run
+        faster because yakkety yakeety yak.
+
+        Optimization 2: Blah bla blah... This should make run
+        faster because yakkety yakeety yak.
+
+        ...  Optimization N: Blah bla blah... This should make run
+        faster because yakkety yakeety yak.
+  Full credit solutions will have a least two optimizations and describe
+  WHY these improved performance in at least a couple sentences.
+
+Optimization 1: 
+int row_num = mat.rows;
+  int col_num = mat.cols; 
+  reduce memroy access
+
+ Optimization 2:
+ for( int i=row_num-1; i>=0;i--){
+    for(j=0; j< col_num-2 ; j+=2){
+      int index = j-i + col_num- 1;
+      int el_ij = MGET(mat, i, j);                // get matrix element on diagonal
+        int vec_d = VGET(vec, index);                   // retrieve current sum for diag
+        VSET(vec, index, el_ij+vec_d);                  // add on back to the diagonal sum
+
+        int index1 = j-i + col_num;
+      int el_ij1 = MGET(mat, i, j+1);                // get matrix element on diagonal
+        int vec_d1 = VGET(vec, index1);                   // retrieve current sum for diag
+        VSET(vec, index1, el_ij1+vec_d1);                  // add on back to the diagonal sum
+
+    }
+    //clean up
+    for(; j<col_num ; j++){
+      int index = j-i + col_num- 1;
+      int el_ij = MGET(mat, i, j);                // get matrix element on diagonal
+        int vec_d = VGET(vec, index);                   // retrieve current sum for diag
+        VSET(vec, index, el_ij+vec_d);                  // add on back to the diagonal sum
+    }
+  }
+  loop umrolling to make it faster
+pipeline
+
+ Optimization 3:
+ change the order to make it access sequentially.
+
+
+
+PROBLEM 2: Timing Search Algorithms
+===================================
+
+  Do your timing study on atlas.cselabs.umn.edu. In most cases, report
+  times larger than 1e-03 seconds as times shorter than this are
+  unreliable. Run searches for more repetitions to lengthen run times.
+
+
+(A) Min Size for Algorithmic Differences
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Determine the size of input array does one start to see a measurable
+  difference in the performance of the linear and logarithmic
+  algorithms.  Produce a timing table which includes all algorithms
+  which clearly demonstrates an uptick in the times associated with some
+  while others remain much lower.  Identify what size this appears to be
+  a occur.
+ous-MacBook-puro:p4-code wangruohan$ ./search_benchmark 5 10 10 atl
+LENGTH SEARCHES       array       tree       list
+   32       640  8.0000e-06  3.0000e-06  4.0000e-06
+   64      1280  1.6000e-05  9.0000e-06  9.0000e-06
+  128      2560  5.5000e-05  2.0000e-05  1.9000e-05
+  256      5120  2.1100e-04  6.4000e-05  2.8000e-05
+  512     10240  6.3100e-04  1.7200e-04  6.5000e-05
+ 1024     20480  2.3230e-03  5.2500e-04  9.5000e-05
+
+ min size = 5,. 2^5 =32
+ 2^10 = 1025
+ repeat *2 *len = searches
+
+(B) Linear Search in List vs Array
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Determine whether the linear array and linked list search remain
+  approximately at the same performance level as size increases to large
+  data or whether one begins to become favorable over other. Determine
+  the approximate size at which this divergence becomes obvious. Discuss
+  reasons WHY this difference arises.
+
+
+Through experimental data, we found that when the size of the data becomes larger, the speed of the linked list will become slower. Because the linked list requires more memory space, he needs to use the pointer to obtain the address of the value, so there will be more memory access permissions , So the speed will be slower.
+
+(C) Binary Search in Tree vs Array
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Compare the binary array search and binary tree search on small to
+  very large arrays. Determine if there is a size at which the
+  performance of these two begins to diverge. If so, describe why this
+  might be happening based on your understanding of the data structures
+  and the memory system. If not, describe why you believe there is
+  little performance difference between the two.
+ous-MacBook-puro:p4-code wangruohan$ ./search_benchmark 5 10 10 bt
+LENGTH SEARCHES       binary       tree
+   32       640  7.0000e-06  5.0000e-06
+   64      1280  1.3000e-05  2.0000e-05
+  128      2560  1.3000e-05  1.4000e-05
+  256      5120  2.7000e-05  2.9000e-05
+  512     10240  5.9000e-05  5.4000e-05
+ 1024     20480  1.2100e-04  1.0500e-04
+
+The binary tree is faster compared with binary array.
+Tree can make length less and as a result, it will be faster.
+But when length get larger, the difference become smaller.
+
+
+(D) Caching Effects on Algorithms
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  It is commonly believed that memory systems that feature a Cache will
+  lead to arrays performing faster than linked structures such as Linked
+  Lists and Binary Search Trees. Describe whether your timings confirm
+  or refute this belief.  Address both types of algorithms in your
+  answer:
+  - What effects does Cache have on Linear Search in arrays and lists
+    and why?
+  - What effects does Cache have on Binary Search in arrays and trees
+    and why?
+
+Memory systems that feature a Cache will lead to arrays performing faster than linked structures such as Linked Lists and Binary Search Trees. but tree is faster than linear search, O(logn)<O(n). 
+
+effects does Cache have on Linear Search in arrays and lists is that the array has sequetially access which is faster, while the list needs more access memory.
+
+effects does Cache have on Binary Search in arrays and trees is that binary array is better than tree because array is read in order to save memory space, but tree is read by pointer and not in order, so it will take more time, so it will make the running time change To be longer. And the performance of binary is better than linear, because the length is shortened.
+
+
+
+(E) OPTIONAL MAKEUP CREDIT
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  If you decided to make use of a table of function pointers/structs
+  which is worth makeup credit, describe your basic design for this
+  below.
